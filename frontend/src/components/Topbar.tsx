@@ -1,15 +1,12 @@
-import { SignedOut, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import { LayoutDashboardIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import SignInOAuthButtons from "./SignInOAuthButtons";
-// import { useAuthStore } from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 
 const Topbar = () => {
-	// const { isAdmin } = useAuthStore();
-	// console.log({ isAdmin });
-	const isAdmin = true;
+	const { isAdmin } = useAuthStore();
 
 	return (
 		<div
@@ -30,10 +27,16 @@ const Topbar = () => {
 				)}
 
 				<SignedOut>
-					<SignInOAuthButtons />
+					<SignInButton forceRedirectUrl="/auth-callback">
+						<Button variant={"secondary"} className='w-full text-white border-zinc-200 h-11'>
+							<img src='/google.png' alt='Google' className='size-5 mr-2' />
+							Sign in
+						</Button>
+					</SignInButton>
 				</SignedOut>
-
-				<UserButton />
+				<SignedIn>
+					<UserButton />
+				</SignedIn>
 			</div>
 		</div>
 	);
