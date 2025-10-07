@@ -89,5 +89,5 @@ export default async (req, res) => {
     isConnected = true;
   }
   // 将 Express app 作为请求处理函数
-  httpServer(req, res);
+  app(req, res);
 };

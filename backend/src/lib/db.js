@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
-
+let cachedDb = null;
 export const connectDB = async () => {
+  if (cachedDb) {
+    return cachedDb;
+  }
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI);
     console.log(`MongoDB connected: ${conn.connection.host}`);
