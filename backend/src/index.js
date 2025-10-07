@@ -9,6 +9,7 @@ import { createServer } from "http";
 import cron from "node-cron";
 
 import { initializeSocket } from "./lib/socket.js";
+import { handleWebSocketFallback } from "./lib/websocket-fallback.js";
 
 import { connectDB } from "./lib/db.js";
 import userRoutes from "./routes/user.route.js";
@@ -25,6 +26,8 @@ const app = express();
 const PORT = process.env.PORT;
 
 const httpServer = createServer(app);
+
+// 初始化Socket.IO
 initializeSocket(httpServer);
 
 app.use(
@@ -76,25 +79,27 @@ app.use((err, req, res, next) => {
 	res.status(500).json({ message: process.env.NODE_ENV === "production" ? err.message : err.message });
 });
 
-// httpServer.listen(PORT, () => {
-// 	console.log("Server is running on port " + PORT);
-// 	connectDB();
-// });
-
+// 在Vercel环境中，我们需要导出httpServer而不是app
+// 因为Socket.IO需要HTTP服务器实例
 let isConnected = false;
 
-export default async (req, res) => {
+// 数据库连接
+const connectDBOnce = async () => {
   if (!isConnected) {
     await connectDB();
     isConnected = true;
-
-		// 在首次连接时启动socket.io
-    if (process.env.NODE_ENV !== 'production') {
-      server.listen(PORT, () => {
-        console.log(`Socket server running on port ${PORT}`);
-      });
-    }
   }
-  // 将 Express app 作为请求处理函数
+};
+
+// 导出HTTP服务器而不是Express应用
+export default async (req, res) => {
+  await connectDBOnce();
+  
+  // 首先尝试WebSocket备用方案
+  if (req.url.startsWith('/socket.io/') || req.url.startsWith('/api/websocket/')) {
+    return handleWebSocketFallback(req, res);
+  }
+  
+  // 在Vercel中，我们需要手动处理请求
   app(req, res);
 };

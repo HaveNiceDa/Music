@@ -7,6 +7,9 @@ export const initializeSocket = (server) => {
 			origin: process.env.NODE_ENV === 'production' ? "https://music-frontend-rust.vercel.app" : "http://localhost:3000",
 			credentials: true,
 		},
+		// 在Vercel环境中需要这些配置
+		transports: ['websocket', 'polling'],
+		allowEIO3: true,
 	});
 
 	const userSockets = new Map(); // { userId: socketId}

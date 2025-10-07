@@ -5,22 +5,29 @@
       "src": "src/index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["src/lib/socket.js"]
+        "includeFiles": ["src/lib/socket.js", "src/lib/db.js", "src/models/**", "src/routes/**", "src/controller/**", "src/middleware/**"]
       }
     }
   ],
   "routes": [
     {
+      "src": "/socket.io/(.*)",
+      "dest": "src/index.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "src/index.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "src/index.js"
     }
   ],
-  "rewrites": [
-    {
-      "source": "/socket.io/(.*)",
-      "destination": "src/index.js"
+  "functions": {
+    "src/index.js": {
+      "maxDuration": 30
     }
-  ],
+  },
   "env": {
     "NODE_ENV": "production"
   }
