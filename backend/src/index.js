@@ -76,7 +76,18 @@ app.use((err, req, res, next) => {
 	res.status(500).json({ message: process.env.NODE_ENV === "production" ? err.message : err.message });
 });
 
-httpServer.listen(PORT, () => {
-	console.log("Server is running on port " + PORT);
-	connectDB();
-});
+// httpServer.listen(PORT, () => {
+// 	console.log("Server is running on port " + PORT);
+// 	connectDB();
+// });
+
+let isConnected = false;
+
+export default async (req, res) => {
+  if (!isConnected) {
+    await connectDB();
+    isConnected = true;
+  }
+  // 将 Express app 作为请求处理函数
+  app(req, res);
+};
