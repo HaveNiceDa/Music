@@ -87,6 +87,13 @@ export default async (req, res) => {
   if (!isConnected) {
     await connectDB();
     isConnected = true;
+
+		// 在首次连接时启动socket.io
+    if (process.env.NODE_ENV !== 'production') {
+      server.listen(PORT, () => {
+        console.log(`Socket server running on port ${PORT}`);
+      });
+    }
   }
   // 将 Express app 作为请求处理函数
   app(req, res);
