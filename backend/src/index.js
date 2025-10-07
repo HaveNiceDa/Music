@@ -29,7 +29,7 @@ initializeSocket(httpServer);
 
 app.use(
 	cors({
-		origin: process.env.NODE_ENV === "production" ? "" : "http://localhost:3000",
+		origin: process.env.NODE_ENV === "production" ? "https://music-frontend-rust.vercel.app" : "http://localhost:3000",
 		credentials: true,
 	})
 );

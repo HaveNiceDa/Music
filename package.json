@@ -1,5 +1,5 @@
 {
-	"name": "spotify-clone",
+	"name": "music",
 	"version": "1.0.0",
 	"description": "",
 	"main": "backend/src/index.js",

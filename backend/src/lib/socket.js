@@ -4,7 +4,7 @@ import { Message } from "../models/message.model.js";
 export const initializeSocket = (server) => {
 	const io = new Server(server, {
 		cors: {
-			origin: "http://localhost:3000",
+			origin: process.env.NODE_ENV === 'production' ? "https://music-frontend-rust.vercel.app" : "http://localhost:3000",
 			credentials: true,
 		},
 	});
