@@ -15,6 +15,12 @@
       "dest": "src/index.js"
     }
   ],
+  "rewrites": [
+    {
+      "source": "/socket.io/(.*)",
+      "destination": "src/index.js"
+    }
+  ],
   "env": {
     "NODE_ENV": "production"
   }
