@@ -21,6 +21,7 @@ class WebSocketFallbackClient implements WebSocketFallback {
     
     try {
       const response = await axiosInstance.post('/websocket/connect', { userId });
+      console.log(this.userId);
       
       if (response.data.success) {
         this.isConnected = true;
